@@ -2,10 +2,11 @@
 __pycache__/
 *.py[cod]
 *$py.class
-
 # C extensions
 *.so
-
+C:\Users\setup\Documents\BanglorePricePrediction\Notebook\banglore-house-price-prediction.ipynb
+Notebook\banglore-house-price-prediction.ipynb
+banglore-house-price-prediction.ipynb
 # Distribution / packaging
 .Python
 build/
