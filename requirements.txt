@@ -1,4 +1,8 @@
-pandas
 numpy
+pandas
+pymysql
 scikit-learn
+seaborn
+catboost
+xgboost
 matplotlib
