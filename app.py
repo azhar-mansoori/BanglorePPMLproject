@@ -28,4 +28,57 @@ if __name__=="__main__":
 
     except Exception as e:
         logging.info("custom exception")
-        raise CustomException(e,sys)        
+        raise CustomException(e,sys)  
+
+
+#MAKING A FLASK APPLICATION TO GET NEW DATA AND PREDICT THE VALUE
+
+from flask import Flask,render_template,request,Request
+from src.banglorepriceprediction.pipelines.prediction_pipeline import PredictPipeline,CustomData
+from sklearn.preprocessing import StandardScaler
+import json
+
+application= Flask(__name__)
+
+app = application
+__locations = None
+__data_columns = None
+
+f = open('columns.json')
+__data_columns = json.loads(f.read())['data_columns']
+__locations = __data_columns[3:]
+#print(__locations)
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+
+@app.route('/predictdata',methods=['GET','POST'])
+def predict_datapoints():
+    if request.method=='GET':
+        return render_template('home.html' ,locations=__locations)
+    else:
+        data=CustomData(
+           
+            location=request.form.get('sLocation'),
+            total_sqft=request.form.get('Squareft'),
+            bhk=request.form.get('uiBHK'),
+            bath=float(request.form.get('uiBathrooms'))
+        )                         
+
+        pred_df = data.get_data_as_data_frame()
+        print(pred_df)
+        print("before prediction")
+
+        predict_pipeline=PredictPipeline()
+        print("mid prediction")
+
+        results = predict_pipeline.predict(pred_df)
+        print("after prediction")
+        print("the result is :",results)
+
+        return render_template('home.html',results=results[0])
+
+if __name__=="__main__":
+    app.run(host="0.0.0.0")        
